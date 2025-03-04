@@ -51,7 +51,7 @@ const Table = ({ info }) => {
       </div>
 
       {/* SM ve MD altı: Kart görünümü */}
-      <div className="md:hidden flex flex-col gap-4">
+      <div className="md:hidden flex flex-col">
         {Object.entries(info).map(([date, times], index) => {
           const formattedDate = new Date(date).toLocaleDateString("tr-TR", {
             day: "numeric",
@@ -64,43 +64,43 @@ const Table = ({ info }) => {
             Array.isArray(times) && (
               <div
                 key={index}
-                className={`bg-gray-200 rounded-lg shadow-md p-4 ${isPast}`}
+                className={`even:bg-gray-200 p-4 ${isPast}`}
               >
-                <div className="border-b pb-2 border-gray-400">
+                <div className="border-b pb-1 border-gray-400">
                   <span className="text-gray-800 font-bold text-sm">
                     {formattedDate}
                   </span>
                 </div>
 
                 {/* Namaz Vakitleri */}
-                <div className="grid grid-cols-3 gap-2 mt-2 text-center">
+                <div className="grid grid-cols-6 text-center text-xs w-full mt-2">
                   <div>
                     <p className="text-gray-900 font-bold">İmsak</p>
-                    <p className="text-lg font-bold text-orange-600">
+                    <p className="text-sm font-bold text-orange-600">
                       {times[0]}
                     </p>
                   </div>
                   <div>
                     <p className="text-gray-700 font-semibold">Güneş</p>
-                    <p className="text-lg font-bold">{times[1]}</p>
+                    <p className="text-sm font-bold">{times[1]}</p>
                   </div>
                   <div>
                     <p className="text-gray-700 font-semibold">Öğle</p>
-                    <p className="text-lg font-bold">{times[2]}</p>
+                    <p className="text-sm font-bold">{times[2]}</p>
                   </div>
                   <div>
                     <p className="text-gray-700 font-semibold">İkindi</p>
-                    <p className="text-lg font-bold">{times[3]}</p>
+                    <p className="text-sm font-bold">{times[3]}</p>
                   </div>
                   <div>
                     <p className="text-gray-900 font-bold">Akşam</p>
-                    <p className="text-lg font-bold text-blue-800">
+                    <p className="text-sm font-bold text-blue-800">
                       {times[4]}
                     </p>
                   </div>
                   <div>
                     <p className="text-gray-700 font-semibold">Yatsı</p>
-                    <p className="text-lg font-bold">{times[5]}</p>
+                    <p className="text-sm font-bold">{times[5]}</p>
                   </div>
                 </div>
               </div>
