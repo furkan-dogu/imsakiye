@@ -51,7 +51,7 @@ const Table = ({ info }) => {
       </div>
 
       {/* SM ve MD altı: Kart görünümü */}
-      <div className="md:hidden flex flex-col">
+      <div className="md:hidden flex flex-col border border-gray-300 shadow-md rounded-lg">
         {Object.entries(info).map(([date, times], index) => {
           const formattedDate = new Date(date).toLocaleDateString("tr-TR", {
             day: "numeric",
