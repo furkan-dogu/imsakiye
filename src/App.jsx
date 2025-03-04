@@ -13,6 +13,23 @@ function App() {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   useEffect(() => {
+    const savedCity = localStorage.getItem("selectedCity");
+    const savedDistrict = localStorage.getItem("selectedDistrict");
+
+    if (savedCity) setSelectedCity(savedCity);
+    if (savedDistrict) setSelectedDistrict(savedDistrict);
+  }, []);
+
+  useEffect(() => {
+    if (selectedCity) {
+      localStorage.setItem("selectedCity", selectedCity);
+    }
+    if (selectedDistrict) {
+      localStorage.setItem("selectedDistrict", selectedDistrict);
+    }
+  }, [selectedCity, selectedDistrict]);
+
+  useEffect(() => {
     if (!selectedDistrict) return;
 
     const getDatas = async () => {
