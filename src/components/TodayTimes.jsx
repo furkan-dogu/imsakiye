@@ -32,26 +32,34 @@ const TodayTimes = ({ info, selectedDistrict }) => {
       const [date, times] = todayEntry;
       const imsakTime = new Date(`${date}T${times[0]}:00`);
       const iftarTime = new Date(`${date}T${times[4]}:00`);
-      let message = "";
       let title = "";
+      let message = "";
 
+      let targetTime = null;
       if (currentTime < imsakTime) {
-        const diff = Math.floor((imsakTime - currentTime) / 1000);
-        const hours = Math.floor(diff / 3600);
-        const minutes = Math.floor((diff % 3600) / 60);
-        const seconds = diff % 60;
-        title = "İmsaka kalan süre:"
-        message = `${hours} saat ${minutes} dakika ${seconds} saniye`;
+        targetTime = imsakTime;
+        title = "İmsaka kalan süre:";
       } else if (currentTime < iftarTime) {
-        const diff = Math.floor((iftarTime - currentTime) / 1000);
-        const hours = Math.floor(diff / 3600);
-        const minutes = Math.floor((diff % 3600) / 60);
-        const seconds = diff % 60;
-        title = "İftara kalan süre:"
-        message = `${hours} saat ${minutes} dakika ${seconds} saniye`;
+        targetTime = iftarTime;
+        title = "İftara kalan süre:";
       }
 
-      setRemainingTimeText({title, message});
+      if (targetTime) {
+        const diff = Math.floor((targetTime - currentTime) / 1000);
+        const hours = Math.floor(diff / 3600);
+        const minutes = Math.floor((diff % 3600) / 60);
+        const seconds = diff % 60;
+
+        // 🔥 Saat ve dakika 0 ise gösterme
+        let timeParts = [];
+        if (hours > 0) timeParts.push(`${hours} saat`);
+        if (minutes > 0) timeParts.push(`${minutes} dakika`);
+        if (seconds > 0) timeParts.push(`${seconds} saniye`);
+
+        message = timeParts.join(" ");
+      }
+
+      setRemainingTimeText({ title, message });
     };
 
     updateRemainingTime();
