@@ -25,19 +25,29 @@ const Cities = ({ selectedCity, setSelectedCity, setSelectedDistrict, openDropdo
 
   const handleSearch = (e) => {
     const value = e.target.value;
-    setSelectedCity(value);
-    setSelectedDistrict(""); // Şehir değişince ilçeyi sıfırla
-    if (value === "") {
-      setFilteredCities(cities);
-    } else {
-      setFilteredCities(cities.filter(city => city.toLocaleLowerCase("tr").includes(value.toLocaleLowerCase("tr"))));
+  
+    if (value.trim() === "") {
+      setSelectedCity(""); 
+      setSelectedDistrict(""); 
+      setFilteredCities(cities); 
+      localStorage.removeItem("selectedCity");
+      localStorage.removeItem("selectedDistrict");
+      setOpenDropdown("cities"); 
+      return;
     }
+    
+  
+    setSelectedCity(value);
+    setFilteredCities(cities.filter(city =>
+      city.toLocaleLowerCase("tr").includes(value.toLocaleLowerCase("tr"))
+    ));
   };
+  
 
   const handleSelect = (city) => {
     setSelectedCity(city);
-    setSelectedDistrict(""); // Şehir seçildiğinde ilçe seçimini sıfırla
-    setOpenDropdown(null); // Dropdown'u kapat
+    setSelectedDistrict(""); 
+    setOpenDropdown(null); 
   };
 
   useEffect(() => {

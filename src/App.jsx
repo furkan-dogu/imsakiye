@@ -5,12 +5,30 @@ import Table from "./components/Table";
 import TodayTimes from "./components/TodayTimes";
 
 function App() {
-  const [selectedCity, setSelectedCity] = useState("Samsun");
-  const [selectedDistrict, setSelectedDistrict] = useState("Samsun");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
   const [openDropdown, setOpenDropdown] = useState(null);
   const [info, setInfo] = useState({});
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+// Şehir veya ilçe değiştiğinde localStorage'yi güncelle
+useEffect(() => {
+  if (selectedCity) {
+    localStorage.setItem("selectedCity", selectedCity);
+  } else {
+    localStorage.removeItem("selectedCity"); 
+  }
+}, [selectedCity]);
+
+useEffect(() => {
+  if (selectedDistrict) {
+    localStorage.setItem("selectedDistrict", selectedDistrict);
+  } else {
+    localStorage.removeItem("selectedDistrict"); 
+  }
+}, [selectedDistrict]);
+
 
   useEffect(() => {
     if (!selectedDistrict) return;
