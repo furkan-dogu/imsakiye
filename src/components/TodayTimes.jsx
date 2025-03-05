@@ -13,6 +13,9 @@ const TodayTimes = ({ info, selectedDistrict }) => {
   }, []);
 
   const todayDate = currentTime.toISOString().split("T")[0]; // YYYY-MM-DD formatı
+  const tomorrowDate = new Date(currentTime);
+  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+  const tomorrowDateStr = tomorrowDate.toISOString().split("T")[0]; // YYYY-MM-DD formatı (yarın)
 
   // 🔥 Bugünün tarihini "4 Mart 2025 Salı" formatına çevir
   const formattedDate = currentTime.toLocaleDateString("tr-TR", {
@@ -24,24 +27,26 @@ const TodayTimes = ({ info, selectedDistrict }) => {
 
   // Bugünün vakitlerini bul
   const todayEntry = Object.entries(info).find(([date]) => date === todayDate);
+  const tomorrowEntry = Object.entries(info).find(([date]) => date === tomorrowDateStr);
 
   useEffect(() => {
-    if (!todayEntry) return;
+    if (!todayEntry && !tomorrowEntry) return;
 
     const updateRemainingTime = () => {
-      const [date, times] = todayEntry;
-      const imsakTime = new Date(`${date}T${times[0]}:00`);
-      const iftarTime = new Date(`${date}T${times[4]}:00`);
       let title = "";
       let message = "";
-
       let targetTime = null;
-      if (currentTime < imsakTime) {
-        targetTime = imsakTime;
-        title = "İmsaka kalan süre:";
-      } else if (currentTime < iftarTime) {
+
+      const [date, times] = todayEntry || [];
+      const iftarTime = date ? new Date(`${date}T${times[4]}:00`) : null; // Bugünün iftarı
+      const imsakTimeTomorrow = tomorrowEntry ? new Date(`${tomorrowEntry[0]}T${tomorrowEntry[1][0]}:00`) : null; // Yarınki imsak
+
+      if (currentTime < iftarTime) {
         targetTime = iftarTime;
         title = "İftara kalan süre:";
+      } else if (imsakTimeTomorrow) {
+        targetTime = imsakTimeTomorrow;
+        title = "İmsaka kalan süre:";
       }
 
       if (targetTime) {
@@ -77,10 +82,10 @@ const TodayTimes = ({ info, selectedDistrict }) => {
 
         {/* 🔥 Kalan Süre */}
         {remainingTimeText && (
-            <div className="font-bold text-lg my-10">
-                <p>{remainingTimeText.title}</p>
-                <p className="text-red-600 ">{remainingTimeText.message}</p>
-            </div>
+          <div className="font-bold text-lg my-10">
+            <p>{remainingTimeText.title}</p>
+            <p className="text-red-600 ">{remainingTimeText.message}</p>
+          </div>
         )}
 
         {/* 🔥 Namaz Vakitleri */}

@@ -5,30 +5,41 @@ import Table from "./components/Table";
 import TodayTimes from "./components/TodayTimes";
 
 function App() {
-  const [selectedCity, setSelectedCity] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedCity, setSelectedCity] = useState(() => {
+    return JSON.parse(localStorage.getItem("selectedCity")) || "";
+  });
+
+  const [selectedDistrict, setSelectedDistrict] = useState(() => {
+    return JSON.parse(localStorage.getItem("selectedDistrict")) || "";
+  });
+
   const [openDropdown, setOpenDropdown] = useState(null);
   const [info, setInfo] = useState({});
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-// Şehir veya ilçe değiştiğinde localStorage'yi güncelle
-useEffect(() => {
-  if (selectedCity) {
-    localStorage.setItem("selectedCity", selectedCity);
-  } else {
-    localStorage.removeItem("selectedCity"); 
-  }
-}, [selectedCity]);
+  useEffect(() => {
+    if (selectedCity) {
+      localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
+    }
+  }, [selectedCity]);
 
-useEffect(() => {
-  if (selectedDistrict) {
-    localStorage.setItem("selectedDistrict", selectedDistrict);
-  } else {
-    localStorage.removeItem("selectedDistrict"); 
-  }
-}, [selectedDistrict]);
+  useEffect(() => {
+    if (selectedDistrict) {
+      localStorage.setItem(
+        "selectedDistrict",
+        JSON.stringify(selectedDistrict)
+      );
+    }
+  }, [selectedDistrict]);
 
+  useEffect(() => {
+    const savedCity = JSON.parse(localStorage.getItem("selectedCity"));
+    const savedDistrict = JSON.parse(localStorage.getItem("selectedDistrict"));
+
+    if (savedCity) setSelectedCity(savedCity);
+    if (savedDistrict) setSelectedDistrict(savedDistrict);
+  }, []);
 
   useEffect(() => {
     if (!selectedDistrict) return;
@@ -70,7 +81,7 @@ useEffect(() => {
         />
       </div>
       {Object.keys(info).length > 0 && (
-          <>
+        <>
           <TodayTimes info={info} selectedDistrict={selectedDistrict} />
           <Table info={info} />
         </>

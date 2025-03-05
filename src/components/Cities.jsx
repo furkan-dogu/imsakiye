@@ -1,6 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 
-const Cities = ({ selectedCity, setSelectedCity, setSelectedDistrict, openDropdown, setOpenDropdown }) => {
+const Cities = ({
+  selectedCity,
+  setSelectedCity,
+  setSelectedDistrict,
+  openDropdown,
+  setOpenDropdown,
+}) => {
   const [cities, setCities] = useState([]);
   const [filteredCities, setFilteredCities] = useState([]);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -11,7 +17,7 @@ const Cities = ({ selectedCity, setSelectedCity, setSelectedDistrict, openDropdo
       try {
         const res = await fetch(`${BASE_URL}/regions?country=Turkey`);
         if (!res.ok) throw new Error("Veri çekme başarısız!");
-        
+
         const data = await res.json();
         setCities(data);
         setFilteredCities(data);
@@ -25,29 +31,29 @@ const Cities = ({ selectedCity, setSelectedCity, setSelectedDistrict, openDropdo
 
   const handleSearch = (e) => {
     const value = e.target.value;
-  
+
     if (value.trim() === "") {
-      setSelectedCity(""); 
-      setSelectedDistrict(""); 
-      setFilteredCities(cities); 
-      localStorage.removeItem("selectedCity");
-      localStorage.removeItem("selectedDistrict");
-      setOpenDropdown("cities"); 
+      setSelectedCity(""); // 🔥 Şehri temizle
+      setSelectedDistrict(""); // 🔥 İlçeyi de sıfırla
+      setFilteredCities(cities); // 🔥 Dropdown içeriğini geri yükle
+      localStorage.removeItem("selectedCity"); // 🔥 localStorage'dan şehir temizlensin
+      localStorage.removeItem("selectedDistrict"); // 🔥 localStorage'dan ilçe temizlensin
+      setOpenDropdown("cities"); // 🔥 Dropdown açık kalsın, şehirler listelensin
       return;
     }
-    
-  
+
     setSelectedCity(value);
-    setFilteredCities(cities.filter(city =>
-      city.toLocaleLowerCase("tr").includes(value.toLocaleLowerCase("tr"))
-    ));
+    setFilteredCities(
+      cities.filter((city) =>
+        city.toLocaleLowerCase("tr").includes(value.toLocaleLowerCase("tr"))
+      )
+    );
   };
-  
 
   const handleSelect = (city) => {
     setSelectedCity(city);
-    setSelectedDistrict(""); 
-    setOpenDropdown(null); 
+    setSelectedDistrict("");
+    setOpenDropdown(null);
   };
 
   useEffect(() => {
@@ -56,15 +62,16 @@ const Cities = ({ selectedCity, setSelectedCity, setSelectedDistrict, openDropdo
         setOpenDropdown(null);
       }
     };
-  
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  
-  
 
   return (
-    <div className="relative dropdown-container w-full lg:w-auto" ref={dropdownRef}>
+    <div
+      className="relative dropdown-container w-full lg:w-auto"
+      ref={dropdownRef}
+    >
       <input
         type="text"
         placeholder="Şehir Seçiniz"
@@ -79,14 +86,13 @@ const Cities = ({ selectedCity, setSelectedCity, setSelectedDistrict, openDropdo
           {filteredCities.length > 0 ? (
             filteredCities.map((city, index) => (
               <li
-  key={index}
-  onMouseDown={(e) => e.stopPropagation()} // 🔥 Tıklama olayını dışarı yayılmasını engelle
-  onClick={() => handleSelect(city)}
-  className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
->
-  {city}
-</li>
-
+                key={index}
+                onMouseDown={(e) => e.stopPropagation()} // 🔥 Tıklama olayını dışarı yayılmasını engelle
+                onClick={() => handleSelect(city)}
+                className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+              >
+                {city}
+              </li>
             ))
           ) : (
             <li className="px-4 py-2 text-gray-500">Şehir bulunamadı</li>
